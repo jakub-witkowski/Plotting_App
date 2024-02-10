@@ -1,0 +1,17 @@
+# *.user files created by Qt
+*.user
+
+# GoogleTest folder
+GoogleTest/*
+
+# Object files
+*.o
+
+# Makefile files
+Makefile*.*
+
+# meta-object compiler files
+moc_*.*
+
+# .qmake.stash
+.qmake.stash
