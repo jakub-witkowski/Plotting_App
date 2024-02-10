@@ -64,6 +64,8 @@ public:
     size_t get_lsr_plot_values_vector_size();
     size_t get_smoothed_lsr_plot_values_vector_size();
     size_t get_lsr_plot_ages_vector_size();
+    TGraph* get_g1_ptr();
+    TGraph* get_g3_ptr();
 
 private:
     TData* dset{nullptr}; // set by the constructor at initialisation

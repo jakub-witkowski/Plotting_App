@@ -390,3 +390,13 @@ size_t TSegment::get_lsr_plot_ages_vector_size()
 {
     return this->lsr_plot_ages.size();
 }
+
+TGraph* TSegment::get_g1_ptr()
+{
+    return this->g1;
+}
+
+TGraph* TSegment::get_g3_ptr()
+{
+    return this->g3;
+}

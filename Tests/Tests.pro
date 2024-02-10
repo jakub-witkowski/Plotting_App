@@ -16,4 +16,6 @@ INCLUDEPATH += "/snap/root-framework/928/usr/local/include/"
 HEADERS +=
 
 SOURCES += tst_datasettests.cpp \
-           "../LSR-Plot-GUI/tdata.cpp"
+           "../LSR-Plot-GUI/tdata.cpp" \
+           "../LSR-Plot-GUI/tsegment.cpp" \
+           "../LSR-Plot-GUI/tpolynomial.cpp"

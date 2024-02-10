@@ -1,43 +1,78 @@
 #include "../LSR-Plot-GUI/tdata.h"
+#include "../LSR-Plot-GUI/tsegment.h"
+#include "../LSR-Plot-GUI/tpolynomial.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
 
-TData dataset("1050.csv");
+TData* dataset = new TData("1050.csv");
 
-TEST(PlottingAppTests, Load_Input_Raw_Data)
+TEST(Class_TData_Tests, Load_Input_Raw_Data)
 {
-    // TData dataset("1050.csv");
-    dataset.load_input();
-    ASSERT_TRUE(dataset.get_raw_data_size() > 0);
+    dataset->load_input();
+    ASSERT_TRUE(dataset->get_raw_data_size() > 0);
 }
 
-TEST(PlottingAppTests, Load_Input_Ages)
+TEST(Class_TData_Tests, Load_Input_Ages)
 {
-    // TData dataset("1050.csv");
-    dataset.load_input();
-    ASSERT_TRUE(dataset.get_ages_vector_size() > 0);
+    dataset->load_input();
+    ASSERT_TRUE(dataset->get_ages_vector_size() > 0);
 }
 
-TEST(PlottingAppTests, Load_Input_Depths)
+TEST(Class_TData_Tests, Load_Input_Depths)
 {
-    // TData dataset("1050.csv");
-    dataset.load_input();
-    ASSERT_TRUE(dataset.get_depths_vector_size() > 0);
+    dataset->load_input();
+    ASSERT_TRUE(dataset->get_depths_vector_size() > 0);
 }
 
-TEST(PlottingAppTests, Compare_Ages_And_Depth_Vectors_Length)
+TEST(Class_TData_Tests, Compare_Ages_And_Depth_Vectors_Length)
 {
-    // TData dataset("1050.csv");
-    dataset.load_input();
-    ASSERT_EQ(dataset.get_depths_vector_size(), dataset.get_ages_vector_size()) << "Depths and Ages vectors are of unequal length.";
+    dataset->load_input();
+    ASSERT_EQ(dataset->get_depths_vector_size(), dataset->get_ages_vector_size()) << "Depths and Ages vectors are of unequal length.";
 }
 
-TEST(PlottingAppTests, Test_Segment_Index_Vector)
+TEST(Class_TData_Tests, Test_Segment_Index_Vector)
 {
-    dataset.load_input();
-    dataset.find_hiatus();
-    ASSERT_TRUE(dataset.get_segment_indexes_size() > 0);
+    dataset->load_input();
+    dataset->find_hiatus();
+    ASSERT_TRUE(dataset->get_segment_indexes_size() > 0);
+}
+
+TEST(Class_TSegment_Tests, Load_Segment_Depths)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    ASSERT_TRUE(segment.get_depths_vector_size() > 0);
+}
+
+TEST(Class_TSegment_Tests, Load_Segment_Ages)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_ages_to_segment();
+    ASSERT_TRUE(segment.get_ages_vector_size() > 0);
+}
+
+TEST(Class_TSegment_Tests, Test_segment_g1_ptr)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.set_g1_ptr();
+    ASSERT_TRUE(segment.get_g1_ptr() != nullptr);
+}
+
+TEST(Class_TSegment_Tests, Test_segment_g3_ptr)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.compute_lsr_values();
+    segment.set_g3_ptr();
+    ASSERT_TRUE(segment.get_g3_ptr() != nullptr);
 }
 
 int main(int argc, char** argv)
