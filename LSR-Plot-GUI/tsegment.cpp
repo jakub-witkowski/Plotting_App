@@ -4,12 +4,12 @@
 
 TSegment::TSegment(TData* ds, size_t f, size_t t) : dset(ds), index_from(f), index_to(t)
 {
-    std::cout << "TSegment Constructor" << std::endl;
+    // std::cout << "TSegment Constructor" << std::endl;
 }
 
 TSegment::~TSegment()
 {
-    std::cout << " TSegment ~Destructor" << std::endl;
+    // std::cout << " TSegment ~Destructor" << std::endl;
 }
 
 /* displays data stored in the ages vector of a TSegment object */

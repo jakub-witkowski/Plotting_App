@@ -6,12 +6,12 @@
 
 TData::TData(std::string f) : filename(f)
 {
-    std::cout << "TData Constructor" << std::endl;
+    // std::cout << "TData Constructor" << std::endl;
 }
 
 TData::~TData()
 {
-    std::cout << " TData ~Destructor" << std::endl;    
+    // std::cout << " TData ~Destructor" << std::endl;
 }
 
 /* reads the dataset from the file and stores it in the raw_data vector */

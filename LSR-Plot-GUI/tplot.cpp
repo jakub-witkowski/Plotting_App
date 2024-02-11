@@ -6,7 +6,7 @@
 
 TPlot::TPlot()
 {
-    std::cout << "TPlot Constructor" << std::endl;
+    // std::cout << "TPlot Constructor" << std::endl;
 }
 
 /* converting constructor */
@@ -25,12 +25,12 @@ TPlot::TPlot(TSegment s)
     set_g2_ptr();
     set_g3_ptr();
     set_g4_ptr();
-    std::cout << "TPlot Converting Constructor" << std::endl;
+    // std::cout << "TPlot Converting Constructor" << std::endl;
 }
 
 TPlot::~TPlot()
 {
-    std::cout << " TPlot ~Destructor" << std::endl;
+    // std::cout << " TPlot ~Destructor" << std::endl;
 }
 
 void TPlot::copy_ages_to_plot()
