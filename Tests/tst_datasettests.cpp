@@ -54,7 +54,7 @@ TEST(Class_TSegment_Tests, Load_Segment_Ages)
     ASSERT_TRUE(segment.get_ages_vector_size() > 0);
 }
 
-TEST(Class_TSegment_Tests, Test_segment_g1_ptr)
+TEST(Class_TSegment_Tests, Test_Segment_g1_ptr)
 {
     dataset->load_input();
     TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
@@ -64,7 +64,7 @@ TEST(Class_TSegment_Tests, Test_segment_g1_ptr)
     ASSERT_TRUE(segment.get_g1_ptr() != nullptr);
 }
 
-TEST(Class_TSegment_Tests, Test_segment_g3_ptr)
+TEST(Class_TSegment_Tests, Test_Segment_g3_ptr)
 {
     dataset->load_input();
     TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
@@ -73,6 +73,36 @@ TEST(Class_TSegment_Tests, Test_segment_g3_ptr)
     segment.compute_lsr_values();
     segment.set_g3_ptr();
     ASSERT_TRUE(segment.get_g3_ptr() != nullptr);
+}
+
+TEST(Class_TSegment_Tests, Test_LSR_Plot_Values_Vector)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.compute_lsr_values();
+    ASSERT_TRUE(segment.get_lsr_plot_values_vector_size() > 0);
+}
+
+TEST(Class_TSegment_Tests, Test_LSR_Ages_Values_Vector)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.compute_lsr_values();
+    ASSERT_TRUE(segment.get_lsr_plot_ages_vector_size() > 0);
+}
+
+TEST(Class_TSegment_Tests, Compare_LSR_Ages_And_LSR_Values_Vectors_Length)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.compute_lsr_values();
+    ASSERT_EQ(segment.get_lsr_plot_ages_vector_size(), segment.get_lsr_plot_values_vector_size()) << "Depths and Ages vectors are of unequal length.";
 }
 
 int main(int argc, char** argv)
