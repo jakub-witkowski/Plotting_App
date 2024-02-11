@@ -1,7 +1,7 @@
 #include "../LSR-Plot-GUI/tdata.h"
 #include "../LSR-Plot-GUI/tsegment.h"
 #include "../LSR-Plot-GUI/tpolynomial.h"
-#include "../LSR-Plot-GUI/tplot.h"
+// #include "../LSR-Plot-GUI/tplot.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
@@ -112,6 +112,16 @@ TEST(Class_TSegment_Tests, Compare_LSR_Ages_And_LSR_Values_Vectors_Length)
     ASSERT_EQ(segment->get_lsr_plot_ages_vector_size(), segment->get_lsr_plot_values_vector_size()) << "Depths and Ages vectors are of unequal length.";
     delete segment;
 }
+
+/*TEST(Class_TPlot_Tests, Converting_Constructor_Test)
+{
+    dataset->load_input();
+    TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment.copy_depths_to_segment();
+    segment.copy_ages_to_segment();
+    segment.compute_lsr_values();
+
+}*/
 
 int main(int argc, char** argv)
 {
