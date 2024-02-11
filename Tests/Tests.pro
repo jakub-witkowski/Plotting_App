@@ -18,4 +18,5 @@ HEADERS +=
 SOURCES += tst_datasettests.cpp \
            "../LSR-Plot-GUI/tdata.cpp" \
            "../LSR-Plot-GUI/tsegment.cpp" \
-           "../LSR-Plot-GUI/tpolynomial.cpp"
+           "../LSR-Plot-GUI/tpolynomial.cpp" \
+           "../LSR-Plot-GUI/tplot.cpp"
