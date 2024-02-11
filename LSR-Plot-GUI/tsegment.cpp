@@ -65,12 +65,12 @@ void TSegment::display_lsr_plot_ages_vector()
 /* calculates lsr values based on data from the ages vector and depths vector */
 void TSegment::compute_lsr_values()
 {
-    for (int i = 1; i < this->ages.size(); i++)
+    for (size_t i = 1; i < this->ages.size(); i++)
     {
         this->lsr_values.push_back(((this->depths[i] - this->depths[i-1]) * 100) / ((this->ages[i] - this->ages[i-1]) * 1000));
     }
 
-    for (int i = 0; i < this->ages.size() - 1; i++)
+    for (size_t i = 0; i < this->ages.size() - 1; i++)
     {
         this->lsr_plot_values.push_back(this->lsr_values[i]);
         this->lsr_plot_values.push_back(this->lsr_values[i]);
@@ -83,7 +83,7 @@ void TSegment::compute_lsr_values()
 starting from position INDEX_FROM to position INDEX_TO */
 void TSegment::copy_ages_to_segment()
 {
-    for (int i = this->index_from; i <= this->index_to; i ++)
+    for (size_t i = this->index_from; i <= this->index_to; i ++)
     {
         this->set_ages(this->dset->get_ages(i));
     }
@@ -94,7 +94,7 @@ starting from position INDEX_FROM to position INDEX_TO */
 
 void TSegment::copy_depths_to_segment()
 {
-    for (int i = this->index_from; i <= this->index_to; i ++)
+    for (size_t i = this->index_from; i <= this->index_to; i ++)
     {
         this->set_depths(this->dset->get_depths(i));
     }
@@ -103,7 +103,7 @@ void TSegment::copy_depths_to_segment()
 /* performs fitting */
 void TSegment::perform_fitting()
 {
-    for (int i = 0; i < this->fit.size(); i++)
+    for (size_t i = 0; i < this->fit.size(); i++)
     {
         this->g1->Fit(this->fit[i]->f, "NQ");
         this->fit[i]->chi2 = this->fit[i]->f->GetChisquare();
@@ -133,7 +133,7 @@ int TSegment::find_the_best_fit(int ind)
     std::vector<std::pair<double, int>> best_fit{};
     std::pair<double, int> item{};
 
-    for (int i = 0; i < this->fit.size() - 1; i++)
+    for (size_t i = 0; i < this->fit.size() - 1; i++)
     {
         if((this->fit[i]->chi2 == 0) || (this->fit[i]->ndf == 0))
             continue;
@@ -171,7 +171,7 @@ bool TSegment::test_for_overfitting()
 {
     bool result{false};
 
-    for (int i = 0; i < this->fit_line.size() - 1; i++)
+    for (size_t i = 0; i < this->fit_line.size() - 1; i++)
     {
         if (fit_line[i+1] < fit_line[i])
             result = true;
@@ -196,7 +196,7 @@ double TSegment::compute_polynomial_expression(int deg, double current_value)
 /* calculates values used for plotting the fit curve of reverse Y axis (no such option in ROOT) */
 void TSegment::get_fit_line_for_plot(int deg)
 {
-    for (int i = 0; i < this->ages.size(); i++)
+    for (size_t i = 0; i < this->ages.size(); i++)
     {
         this->fit_line.push_back(compute_polynomial_expression(deg, this->ages[i]));
     }
@@ -208,13 +208,13 @@ void TSegment::get_fit_line_for_plot(int deg)
 /* calculates smoothed LSR values */
 void TSegment::lsr_smoothing()
 {
-    for (int i = 1; i < this->ages.size(); i++)
+    for (size_t i = 1; i < this->ages.size(); i++)
     {
         this->smoothed_lsr_values.push_back(((this->fit_line[i] - this->fit_line[i-1])*100)/((this->ages[i] - this->ages[i-1])*1000));
     }
 
     /* establish LSR values and age tiepoints for plotting vector */
-    for (int i = 0; i < this->ages.size() - 1; i++)
+    for (size_t i = 0; i < this->ages.size() - 1; i++)
     {
         this->smoothed_lsr_plot_values.push_back(this->smoothed_lsr_values[i]);
         this->smoothed_lsr_plot_values.push_back(this->smoothed_lsr_values[i]);

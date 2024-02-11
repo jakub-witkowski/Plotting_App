@@ -126,7 +126,7 @@ void MainWindow::on_pushButton_3_clicked()
         }
 
         /* polynomial fitting is performed; test for overfitting is performed as well */
-        for (int i = 0; i < segments.size(); i++)
+        for (size_t i = 0; i < segments.size(); i++)
         {
             for (int j = 0; j < 10; j++)
             {
@@ -167,7 +167,7 @@ void MainWindow::on_pushButton_3_clicked()
         {
             plot = new TPlot();
 
-            for (int i = 0; i < segments.size(); i++)
+            for (size_t i = 0; i < segments.size(); i++)
             {
                 plot->set_segm_ptr(&segments[i]);
                 plot->copy_ages_to_plot();

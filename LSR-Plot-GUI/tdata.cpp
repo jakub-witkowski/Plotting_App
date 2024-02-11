@@ -29,7 +29,7 @@ void TData::load_input()
     std::setlocale(LC_NUMERIC, "C");
 
     /* Separate data on coma, convert substring to double and copy to the respective depths or ages vector */
-    for (int i = 0; i < raw_data.size(); i++)
+    for (size_t i = 0; i < raw_data.size(); i++)
     {
         size_t pos = raw_data[i].find(",");
         set_depths(std::stod(raw_data[i].substr(0, pos)));

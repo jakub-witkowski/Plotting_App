@@ -75,7 +75,7 @@ void TPlot::copy_smoothed_lsr_plot_values_to_plot()
 
 void TPlot::copy_lsr_plot_ages_to_plot()
 {
-    for (int i = 0; i < this->segm_ptr->get_lsr_plot_ages_vector_size(); i++)
+    for (size_t i = 0; i < this->segm_ptr->get_lsr_plot_ages_vector_size(); i++)
     {
         this->set_lsr_plot_ages(this->segm_ptr->get_lsr_plot_age(i));
     }
@@ -85,7 +85,7 @@ void TPlot::copy_lsr_plot_ages_to_plot()
 void TPlot::display_ages_vector()
 {
     std::cout << "Data in the ages vector: " << std::endl;
-    for (int i = 0; i < get_ages_vector_size(); i++)
+    for (size_t i = 0; i < get_ages_vector_size(); i++)
     {
         std::cout << i << ": " << this->ages[i] << std::endl;
     }
