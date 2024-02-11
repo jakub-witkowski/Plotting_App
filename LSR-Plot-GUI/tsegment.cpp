@@ -108,7 +108,7 @@ void TSegment::perform_fitting()
         this->g1->Fit(this->fit[i]->f, "NQ");
         this->fit[i]->chi2 = this->fit[i]->f->GetChisquare();
         this->fit[i]->ndf = this->fit[i]->f->GetNDF();
-        std::cout << i << ": Chi2/ndf = " << this->fit[i]->chi2 / this->fit[i]->ndf << std::endl;
+        // std::cout << i << ": Chi2/ndf = " << this->fit[i]->chi2 / this->fit[i]->ndf << std::endl;
     }
 }
 
@@ -316,12 +316,12 @@ TData* TSegment::get_dataset_ptr()
     return this->dset;
 }
 
-size_t TSegment::get_index_from()
+int TSegment::get_index_from()
 {
     return this->index_from;
 }
 
-size_t TSegment::get_index_to()
+int TSegment::get_index_to()
 {
     return this->index_to;
 }
@@ -356,37 +356,37 @@ double TSegment::get_lsr_plot_age(int i)
     return this->lsr_plot_ages[i];
 }
 
-size_t TSegment::get_fit_line_vector_size()
+int TSegment::get_fit_line_vector_size()
 {
     return this->fit_line.size();
 }
 
-size_t TSegment::get_ages_vector_size()
+int TSegment::get_ages_vector_size()
 {
     return this->ages.size();
 }
 
-size_t TSegment::get_depths_vector_size()
+int TSegment::get_depths_vector_size()
 {
     return this->depths.size();
 }
 
-size_t TSegment::get_lsr_values_vector_size()
+int TSegment::get_lsr_values_vector_size()
 {
     return this->lsr_values.size();
 }
 
-size_t TSegment::get_lsr_plot_values_vector_size()
+int TSegment::get_lsr_plot_values_vector_size()
 {
     return this->lsr_plot_values.size();
 }
 
-size_t TSegment::get_smoothed_lsr_plot_values_vector_size()
+int TSegment::get_smoothed_lsr_plot_values_vector_size()
 {
     return this->smoothed_lsr_plot_values.size();
 }
 
-size_t TSegment::get_lsr_plot_ages_vector_size()
+int TSegment::get_lsr_plot_ages_vector_size()
 {
     return this->lsr_plot_ages.size();
 }

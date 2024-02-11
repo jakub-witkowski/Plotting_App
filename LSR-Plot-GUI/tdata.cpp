@@ -159,22 +159,22 @@ std::pair<size_t,size_t> TData::make_index(int from, int to)
 }
 
 /* getter functions */
-size_t TData::get_raw_data_size()
+int TData::get_raw_data_size()
 {
     return this->raw_data.size();
 }
 
-size_t TData::get_ages_vector_size()
+int TData::get_ages_vector_size()
 {
     return this->ages.size();
 }
 
-size_t TData::get_depths_vector_size()
+int TData::get_depths_vector_size()
 {
     return this->depths.size();
 }
 
-size_t TData::get_segment_indexes_size()
+int TData::get_segment_indexes_size()
 {
     return this->segment_indexes.size();
 }
