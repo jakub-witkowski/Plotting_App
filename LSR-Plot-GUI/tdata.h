@@ -34,10 +34,10 @@ public:
     void set_segment_index(std::pair<int,int>);
 
 /* getter functions */
-    int get_raw_data_size();
-    int get_ages_vector_size();
-    int get_depths_vector_size();
-    int get_segment_indexes_size();
+    size_t get_raw_data_size();
+    size_t get_ages_vector_size();
+    size_t get_depths_vector_size();
+    size_t get_segment_indexes_size();
     std::string get_raw_data(int);
     double get_ages(int);
     double get_depths(int);

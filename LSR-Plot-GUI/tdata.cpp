@@ -41,7 +41,7 @@ void TData::load_input()
 void TData::display_raw_data()
 {
     std::cout << "Data in the raw_data vector: " << std::endl;
-    for (int i = 0; i < get_raw_data_size(); i++)
+    for (size_t i = 0; i < get_raw_data_size(); i++)
     {
         std::cout << get_raw_data(i) << std::endl;
     }
@@ -50,7 +50,7 @@ void TData::display_raw_data()
 void TData::display_ages_vector()
 {
     std::cout << "Data in the ages vector: " << std::endl;
-    for (int i = 0; i < get_ages_vector_size(); i++)
+    for (size_t i = 0; i < get_ages_vector_size(); i++)
     {
         std::cout << i << ": " << get_ages(i) << std::endl;
     }
@@ -59,7 +59,7 @@ void TData::display_ages_vector()
 void TData::display_depths_vector()
 {
     std::cout << "Data in the depths vector: " << std::endl;
-    for (int i = 0; i < get_depths_vector_size(); i++)
+    for (size_t i = 0; i < get_depths_vector_size(); i++)
     {
         std::cout << i << ": " << get_depths(i) << std::endl;
     }
@@ -68,7 +68,7 @@ void TData::display_depths_vector()
 void TData::display_segment_indexes_vector()
 {
     std::cout << "Data in the segment_indexes vector:" << std::endl;
-    for (int i = 0; i < get_segment_indexes_size(); i++)
+    for (size_t i = 0; i < get_segment_indexes_size(); i++)
     {
         std::cout << "segment_indexes[" << i << "]: " << segment_indexes[i].first << " " << segment_indexes[i].second << std::endl;
     }
@@ -78,7 +78,7 @@ bool TData::is_ages_vector_sorted()
 {
     bool result{true};
 
-    for (int i = 1; i < get_ages_vector_size(); i++)
+    for (size_t i = 1; i < get_ages_vector_size(); i++)
     {
         if (get_ages(i) < get_ages(i-1))
             result = false;
@@ -91,7 +91,7 @@ bool TData::is_depths_vector_sorted()
 {
     bool result{true};
 
-    for (int i = 1; i < get_depths_vector_size(); i++)
+    for (size_t i = 1; i < get_depths_vector_size(); i++)
     {
         if (get_depths(i) < get_depths(i-1))
             result = false;
@@ -115,7 +115,7 @@ int TData::find_hiatus()
     current_index.first = 0;
     previous_index = current_index;
 
-    for (int i = 1; i < this->get_depths_vector_size(); i++)
+    for (size_t i = 1; i < this->get_depths_vector_size(); i++)
     {
         if (this->get_depths(i) == this->get_depths(i-1))
         {    
@@ -159,22 +159,22 @@ std::pair<size_t,size_t> TData::make_index(int from, int to)
 }
 
 /* getter functions */
-int TData::get_raw_data_size()
+size_t TData::get_raw_data_size()
 {
     return this->raw_data.size();
 }
 
-int TData::get_ages_vector_size()
+size_t TData::get_ages_vector_size()
 {
     return this->ages.size();
 }
 
-int TData::get_depths_vector_size()
+size_t TData::get_depths_vector_size()
 {
     return this->depths.size();
 }
 
-int TData::get_segment_indexes_size()
+size_t TData::get_segment_indexes_size()
 {
     return this->segment_indexes.size();
 }
