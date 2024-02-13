@@ -9,6 +9,8 @@ class TSegment;
 #include "TCanvas.h" // ROOT graphics class
 #include "TMultiGraph.h" // A TMultiGraph allows to manipulate a set of graphs as a single entity (from ROOT documentation)
 #include "TAxis.h"
+// #include "TPad.h"
+// #include "TAttPad.h"
 
 /* include STL header files */
 #include <vector>

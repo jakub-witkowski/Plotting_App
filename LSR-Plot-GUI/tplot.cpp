@@ -102,8 +102,9 @@ void TPlot::delete_ptrs()
 void TPlot::plot()
 {
     this->cnv->Divide(2,1);
-    this->cnv->cd(1);
+    this->cnv->cd(1)->SetLeftMargin(0.15);
 
+    this->cnv->cd(1);
     this->g1->SetTitle("Age vs Depth, raw");
     this->g1->SetMarkerColor(4);
     this->g1->SetMarkerSize(1.25);
@@ -119,6 +120,7 @@ void TPlot::plot()
     this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (Ma); Depth (mbsf)");
     this->multi1->GetXaxis()->CenterTitle();
     this->multi1->GetYaxis()->CenterTitle();
+    this->multi1->GetYaxis()->SetTitleOffset(2.25);
     this->multi1->Draw("A RY");
     
     this->cnv->cd(2);
@@ -141,7 +143,6 @@ void TPlot::plot()
 
     this->cnv->Modified();
     this->cnv->Update();
-    // this->cnv->Print(f.c_str());
 }
 
 void TPlot::plot_to_png(std::string f)
