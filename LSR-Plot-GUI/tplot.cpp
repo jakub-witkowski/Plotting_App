@@ -116,7 +116,7 @@ void TPlot::plot()
     this->multi1->Add(g1, "p");
     this->multi1->Add(g2, "l");
     this->multi1->SetName("AvD");
-    this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (Ma);");
+    this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (Ma); Depth (mbsf)");
     this->multi1->GetXaxis()->CenterTitle();
     this->multi1->GetYaxis()->CenterTitle();
     this->multi1->Draw("A RY");
