@@ -11,6 +11,7 @@ class TSegment;
 #include "TAxis.h"
 // #include "TPad.h"
 // #include "TAttPad.h"
+#include "TLegend.h"
 
 /* include STL header files */
 #include <vector>
@@ -22,6 +23,8 @@ class TPlot
     TPlot(TSegment);
     ~TPlot();
     TCanvas* cnv = new TCanvas("cnv", "LSR-Plot output", 0, 0, 1200, 800);
+    TLegend* leg_left = new TLegend(0.5,0.8,0.9,0.9);
+    TLegend* leg_right = new TLegend(0.7,0.8,0.9,0.9);
 
     void copy_ages_to_plot();
     void copy_depths_to_plot();

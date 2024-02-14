@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 TPlot::TPlot()
 {
@@ -103,6 +104,7 @@ void TPlot::plot()
 {
     this->cnv->Divide(2,1);
     this->cnv->cd(1)->SetLeftMargin(0.15);
+    this->cnv->cd(2)->SetLeftMargin(0.15);
 
     this->cnv->cd(1);
     this->g1->SetTitle("Age vs Depth, raw");
@@ -117,12 +119,16 @@ void TPlot::plot()
     this->multi1->Add(g1, "p");
     this->multi1->Add(g2, "l");
     this->multi1->SetName("AvD");
-    this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (Ma); Depth (mbsf)");
+    this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (million years); Depth (m below seafloor)");
     this->multi1->GetXaxis()->CenterTitle();
     this->multi1->GetYaxis()->CenterTitle();
     this->multi1->GetYaxis()->SetTitleOffset(2.25);
     this->multi1->Draw("A RY");
     
+    leg_left->AddEntry(g1,"Age model tiepoints","p");
+    leg_left->AddEntry(g2,"Polynomial fit","l");
+    leg_left->Draw();
+
     this->cnv->cd(2);
 
     this->g3->SetTitle("LSR variability, raw");
@@ -136,10 +142,20 @@ void TPlot::plot()
     this->multi2->Add(g3, "l");
     this->multi2->Add(g4, "l");
     this->multi2->SetName("LSR");
-    this->multi2->SetTitle("Raw vs smoothed LSR plot; Age (Ma); Linear sedimentation rate (cm/kyr)");
+    this->multi2->SetTitle("Raw vs smoothed LSR plot; Age (million years); Linear sedimentation rate (cm/thousand years)");
     this->multi2->GetXaxis()->CenterTitle();
     this->multi2->GetYaxis()->CenterTitle();
+    this->multi2->GetYaxis()->SetTitleOffset(1.25);
     this->multi2->Draw("A L");
+
+    /* modify the Y axis to avoid overlap with the legend box */
+    double max = *std::max_element(this->lsr_plot_values.begin(), this->lsr_plot_values.end());
+    this->cnv->cd(2)->Modified();
+    this->multi2->SetMaximum((1.25 * max));
+
+    leg_right->AddEntry(g3,"age model","l");
+    leg_right->AddEntry(g4,"smoothed","l");
+    leg_right->Draw();
 
     this->cnv->Modified();
     this->cnv->Update();
