@@ -103,8 +103,12 @@ void TPlot::delete_ptrs()
 void TPlot::plot()
 {
     this->cnv->Divide(2,1);
+    // gStyle->SetTitleH(0.2);
+    gStyle->SetTitleSize(0.03, "n");
+
     this->cnv->cd(1)->SetLeftMargin(0.15);
     this->cnv->cd(2)->SetLeftMargin(0.15);
+    // gStyle->SetTitleFont(0.2, "n");
 
     this->cnv->cd(1);
     this->g1->SetTitle("Age vs Depth, raw");
@@ -161,7 +165,7 @@ void TPlot::plot()
     this->cnv->Update();
 }
 
-void TPlot::plot_to_png(std::string f)
+/*void TPlot::plot_to_png(std::string f)
 {
     this->cnv->Divide(2,1);
     this->cnv->cd(1);
@@ -202,7 +206,7 @@ void TPlot::plot_to_png(std::string f)
     this->multi2->Draw("A L");
 
     this->cnv->Print(f.c_str());
-}
+}*/
 
 void TPlot::set_ages(double a)
 {

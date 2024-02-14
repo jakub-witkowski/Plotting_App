@@ -12,6 +12,7 @@ class TSegment;
 // #include "TPad.h"
 // #include "TAttPad.h"
 #include "TLegend.h"
+#include "TStyle.h"
 
 /* include STL header files */
 #include <vector>
@@ -35,7 +36,7 @@ class TPlot
     void display_ages_vector();
     void delete_ptrs();
     void plot();
-    void plot_to_png(std::string);
+    // void plot_to_png(std::string);
 
     void set_ages(double);
     void set_depths(double);
