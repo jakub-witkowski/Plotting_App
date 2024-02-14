@@ -104,7 +104,7 @@ void TPlot::plot()
 {
     this->cnv->Divide(2,1);
     // gStyle->SetTitleH(0.2);
-    gStyle->SetTitleSize(0.03, "n");
+    gStyle->SetTitleSize(0.0375, "n");
 
     this->cnv->cd(1)->SetLeftMargin(0.15);
     this->cnv->cd(2)->SetLeftMargin(0.15);
