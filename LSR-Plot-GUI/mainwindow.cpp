@@ -219,6 +219,9 @@ void MainWindow::on_pushButton_3_clicked()
 
         app.Run();
     }
+
+    delete dataset;
+    delete plot;
 }
 
 void MainWindow::on_pushButton_4_clicked()

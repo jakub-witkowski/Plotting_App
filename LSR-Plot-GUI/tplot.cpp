@@ -155,6 +155,7 @@ void TPlot::plot()
     /* modify the Y axis to avoid overlap with the legend box */
     double max = *std::max_element(this->lsr_plot_values.begin(), this->lsr_plot_values.end());
     this->cnv->cd(2)->Modified();
+    this->multi2->SetMinimum(0.);
     this->multi2->SetMaximum((1.25 * max));
 
     leg_right->AddEntry(g3,"age model","l");
