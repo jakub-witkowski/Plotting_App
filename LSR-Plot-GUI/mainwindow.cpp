@@ -122,7 +122,7 @@ void MainWindow::on_pushButton_3_clicked()
             segments[i].copy_depths_to_segment();
             segments[i].set_g1_ptr();
             segments[i].compute_lsr_values();
-            segments[i].set_g3_ptr();
+            // segments[i].set_g3_ptr();
         }
 
         /* polynomial fitting is performed; test for overfitting is performed as well */
@@ -135,6 +135,7 @@ void MainWindow::on_pushButton_3_clicked()
 
             segments[i].perform_fitting();
             segments[i].get_fit_line_for_plot(segments[i].find_the_best_fit(0));
+            segments[i].get_pretty_fit_line_for_plot(segments[i].find_the_best_fit(0));
 
             is_overfitted = segments[i].test_for_overfitting();
             int index{1};
@@ -142,14 +143,16 @@ void MainWindow::on_pushButton_3_clicked()
             {
                 segments[i].clear_fit_line_vector();
                 segments[i].get_fit_line_for_plot(segments[i].find_the_best_fit(index));
+                segments[i].clear_pretty_fit_line_vector();
+                segments[i].get_pretty_fit_line_for_plot(segments[i].find_the_best_fit(index));
                 index++;
                 is_overfitted = segments[i].test_for_overfitting();
             }
 
             /* linear sedimentation rates are smoothed using the selected polynomial fit */
-            segments[i].set_g2_ptr();
+            segments[i].set_g2_ptr_pretty();
             segments[i].lsr_smoothing();
-            segments[i].set_g4_ptr();
+            // segments[i].set_g4_ptr();
         }
 
         /* ROOT widget TApplication is created */
@@ -165,7 +168,7 @@ void MainWindow::on_pushButton_3_clicked()
         }
         else if (segments.size() > 1)
         {
-            plot = new TPlot();
+            std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
 
             for (size_t i = 0; i < segments.size(); i++)
             {
@@ -173,8 +176,8 @@ void MainWindow::on_pushButton_3_clicked()
                 plot->copy_ages_to_plot();
                 plot->copy_depths_to_plot();
                 plot->set_g1_ptr();
-                plot->copy_fit_line_to_plot();
-                plot->set_g2_ptr();
+                // plot->copy_fit_line_to_plot();
+                // plot->set_g2_ptr();
 
                 /* modifications to the data vectors to reflect hiatuses between segments */
                 if (segments.size() > 1)
@@ -212,7 +215,7 @@ void MainWindow::on_pushButton_3_clicked()
                 plot->set_g4_ptr();
             }
 
-            plot->plot();
+            plot->plot_from_array();
             TRootCanvas *rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
             rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
         }

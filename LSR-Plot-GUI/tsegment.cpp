@@ -117,7 +117,12 @@ void TSegment::clear_fit_line_vector()
     this->fit_line.clear();
 }
 
-void TSegment::delete_ptrs()
+void TSegment::clear_pretty_fit_line_vector()
+{
+    this->pretty_fit_line.clear();
+}
+
+/*void TSegment::delete_ptrs()
 {
     // delete this->cnv;
     // delete this->multi1;
@@ -126,7 +131,7 @@ void TSegment::delete_ptrs()
     delete this->g2;
     delete this->g3;
     delete this->g4;
-}
+}*/
 
 int TSegment::find_the_best_fit(int ind)
 {
@@ -171,9 +176,9 @@ bool TSegment::test_for_overfitting()
 {
     bool result{false};
 
-    for (size_t i = 0; i < this->fit_line.size() - 1; i++)
+    for (size_t i = 0; i < this->pretty_fit_line.size() - 1; i++)
     {
-        if (fit_line[i+1] < fit_line[i])
+        if (pretty_fit_line[i+1] < pretty_fit_line[i])
             result = true;
     }
 
@@ -200,9 +205,35 @@ void TSegment::get_fit_line_for_plot(int deg)
     {
         this->fit_line.push_back(compute_polynomial_expression(deg, this->ages[i]));
     }
+}
 
-    /* Create a TGraph object for plotting the fit line */
-    // this->set_g2_ptr();
+void TSegment::get_pretty_fit_line_for_plot(int deg)
+{
+    double step{};
+
+    if ((*(this->ages.end() - 1) - *(this->ages.begin())) < 10)
+        step = 0.25;
+    else
+        step = 0.5;
+
+    if (this->ages_for_pretty_fit_line.size() == 0)
+    {
+        this->ages_for_pretty_fit_line.push_back(this->ages[0]);
+        size_t index{1};
+        while (*(this->ages_for_pretty_fit_line.end() - 1) < (*(this->ages.end() - 1) - step))
+        {
+            this->ages_for_pretty_fit_line.push_back(this->ages_for_pretty_fit_line[index - 1] + step);
+            index++;
+        }
+    }
+    
+    if (*(this->ages_for_pretty_fit_line.end() - 1) < *(ages.end() - 1))
+        this->ages_for_pretty_fit_line.push_back(*(this->ages.end() - 1));
+
+    for (size_t i = 0; i < this->ages_for_pretty_fit_line.size(); i++)
+    {
+        this->pretty_fit_line.push_back(compute_polynomial_expression(deg, this->ages_for_pretty_fit_line[i]));
+    }
 }
 
 /* calculates smoothed LSR values */
@@ -219,59 +250,6 @@ void TSegment::lsr_smoothing()
         this->smoothed_lsr_plot_values.push_back(this->smoothed_lsr_values[i]);
         this->smoothed_lsr_plot_values.push_back(this->smoothed_lsr_values[i]);
     }
-    
-    /* create a TGraph object for plotting the smoothed lsr values */
-    // this->set_g4_ptr();
-}
-
-/* plots data stored in a TSegment object */
-void TSegment::plot_to_png(std::string f)
-{
-    this->cnv->Divide(2,1);
-    this->cnv->cd(1);
-
-    this->g1->SetTitle("Age vs Depth, raw");
-    this->g1->SetMarkerColor(4);
-    this->g1->SetMarkerSize(1.25);
-    this->g1->SetMarkerStyle(20);
-    
-    // perform_fitting();
-    // get_fit_line_for_plot(find_best_fit());
-    // get_fit_line_for_plot(find_the_best_fit());
-
-    this->g2->SetTitle("Polynomial fit");
-    this->g2->SetLineColor(2);
-    this->g2->SetLineWidth(2);
-
-    this->multi1->Add(g1, "p");
-    this->multi1->Add(g2, "l");
-    this->multi1->SetName("AvD");
-    this->multi1->SetTitle("Age vs depth plot with polynomial smoothing; Age (Ma);");
-    this->multi1->GetXaxis()->CenterTitle();
-    this->multi1->GetYaxis()->CenterTitle();
-    this->multi1->Draw("A RY");
-    
-    this->cnv->cd(2);
-
-    this->g3->SetTitle("LSR variability, raw");
-    this->g3->SetLineColor(4);
-    this->g3->SetLineWidth(2);
-
-    // lsr_smoothing();
-
-    this->g4->SetTitle("LSR variability, smoothed");
-    this->g4->SetLineColor(2);
-    this->g4->SetLineWidth(2);
-
-    this->multi2->Add(g3, "l");
-    this->multi2->Add(g4, "l");
-    this->multi2->SetName("LSR");
-    this->multi2->SetTitle("Raw vs smoothed LSR plot; Age (Ma); Linear sedimentation rate (cm/kyr)");
-    this->multi2->GetXaxis()->CenterTitle();
-    this->multi2->GetYaxis()->CenterTitle();
-    this->multi2->Draw("A L");
-
-    this->cnv->Print(f.c_str());
 }
 
 /* setter functions */
@@ -290,7 +268,12 @@ void TSegment::set_g1_ptr()
     this->g1 = new TGraph(this->ages.size(), &this->ages[0], &this->depths[0]);
 }
 
-void TSegment::set_g2_ptr()
+void TSegment::set_g2_ptr_pretty()
+{
+    this->g2 = new TGraph(this->ages_for_pretty_fit_line.size(), &this->ages_for_pretty_fit_line[0], &this->pretty_fit_line[0]);
+}
+
+/*void TSegment::set_g2_ptr()
 {
     this->g2 = new TGraph(this->ages.size(), &this->ages[0], &this->fit_line[0]);
 }
@@ -303,7 +286,7 @@ void TSegment::set_g3_ptr()
 void TSegment::set_g4_ptr()
 {
     this->g4 = new TGraph(this->lsr_plot_ages.size(), &this->lsr_plot_ages[0], &this->smoothed_lsr_plot_values[0]);
-}
+}*/
 
 void TSegment::add_to_fit_vector(int d)
 {
@@ -316,12 +299,12 @@ TData* TSegment::get_dataset_ptr()
     return this->dset;
 }
 
-int TSegment::get_index_from()
+size_t TSegment::get_index_from()
 {
     return this->index_from;
 }
 
-int TSegment::get_index_to()
+size_t TSegment::get_index_to()
 {
     return this->index_to;
 }
@@ -356,42 +339,67 @@ double TSegment::get_lsr_plot_age(int i)
     return this->lsr_plot_ages[i];
 }
 
-int TSegment::get_fit_line_vector_size()
+double TSegment::get_pretty_fit_line(int i)
+{
+    return this->pretty_fit_line[i];
+}
+
+double TSegment::get_ages_for_pretty_fit_line(int i)
+{
+    return this->ages_for_pretty_fit_line[i];
+}
+
+size_t TSegment::get_fit_line_vector_size()
 {
     return this->fit_line.size();
 }
 
-int TSegment::get_ages_vector_size()
+size_t TSegment::get_ages_vector_size()
 {
     return this->ages.size();
 }
 
-int TSegment::get_depths_vector_size()
+size_t TSegment::get_depths_vector_size()
 {
     return this->depths.size();
 }
 
-int TSegment::get_lsr_values_vector_size()
+size_t TSegment::get_lsr_values_vector_size()
 {
     return this->lsr_values.size();
 }
 
-int TSegment::get_lsr_plot_values_vector_size()
+size_t TSegment::get_lsr_plot_values_vector_size()
 {
     return this->lsr_plot_values.size();
 }
 
-int TSegment::get_smoothed_lsr_plot_values_vector_size()
+size_t TSegment::get_smoothed_lsr_plot_values_vector_size()
 {
     return this->smoothed_lsr_plot_values.size();
 }
 
-int TSegment::get_lsr_plot_ages_vector_size()
+size_t TSegment::get_lsr_plot_ages_vector_size()
 {
     return this->lsr_plot_ages.size();
 }
 
-TGraph* TSegment::get_g1_ptr()
+size_t TSegment::get_pretty_fit_line_vector_size()
+{
+    return this->pretty_fit_line.size();
+}
+
+size_t TSegment::get_ages_for_pretty_fit_line_vector_size()
+{
+    return this->ages_for_pretty_fit_line.size();
+}
+
+TGraph* TSegment::get_g2_pretty_ptr()
+{
+    return this->g2;
+}
+
+/*TGraph* TSegment::get_g1_ptr()
 {
     return this->g1;
 }
@@ -399,4 +407,4 @@ TGraph* TSegment::get_g1_ptr()
 TGraph* TSegment::get_g3_ptr()
 {
     return this->g3;
-}
+}*/

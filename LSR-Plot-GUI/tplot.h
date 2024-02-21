@@ -21,8 +21,11 @@ class TPlot
 {
     public:
     TPlot();
+    TPlot(int, std::vector<TSegment>);
     TPlot(TSegment);
     ~TPlot();
+
+    // int array_size;
     TCanvas* cnv = new TCanvas("cnv", "LSR-Plot output", 0, 0, 1200, 800);
     TLegend* leg_left = new TLegend(0.5,0.8,0.9,0.9);
     TLegend* leg_right = new TLegend(0.7,0.8,0.9,0.9);
@@ -30,12 +33,15 @@ class TPlot
     void copy_ages_to_plot();
     void copy_depths_to_plot();
     void copy_fit_line_to_plot();
+    void copy_pretty_fit_line_to_plot();
+    void copy_ages_for_pretty_fit_line_to_plot();
     void copy_lsr_plot_values_to_plot();
     void copy_smoothed_lsr_plot_values_to_plot();
     void copy_lsr_plot_ages_to_plot();
     void display_ages_vector();
     void delete_ptrs();
     void plot();
+    void plot_from_array();
     // void plot_to_png(std::string);
 
     void set_ages(double);
@@ -44,10 +50,13 @@ class TPlot
     void set_lsr_plot_values(double);
     void set_smoothed_lsr_plot_values(double);
     void set_lsr_plot_ages(double);
+    void set_pretty_fit_line(double);
+    void set_ages_for_pretty_fit_line(double);
 
     void set_segm_ptr(TSegment*);
     void set_g1_ptr();
     void set_g2_ptr();
+    void set_g2_ptr_pretty();
     void set_g3_ptr();
     void set_g4_ptr();
 
@@ -59,6 +68,8 @@ class TPlot
     std::vector<double> depths{};
     std::vector<double> ages{};
     std::vector<double> fit_line{};
+    std::vector<double> pretty_fit_line{};
+    std::vector<double> ages_for_pretty_fit_line{};
     std::vector<double> lsr_plot_values{};
     std::vector<double> smoothed_lsr_plot_values{};
     std::vector<double> lsr_plot_ages{};
@@ -70,6 +81,9 @@ class TPlot
     TGraph* g2{nullptr};
     TGraph* g3{nullptr};
     TGraph* g4{nullptr};
+    // TGraph graphs{nullptr};
+    TGraph* graphs = nullptr;
+    int graphs_size{};
 };
 
 #endif

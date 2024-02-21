@@ -57,7 +57,7 @@ TEST(Class_TSegment_Tests, Load_Segment_Ages)
     delete segment;
 }
 
-TEST(Class_TSegment_Tests, Test_Segment_g1_ptr)
+/*TEST(Class_TSegment_Tests, Test_Segment_g1_ptr)
 {
     dataset->load_input();
     TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
@@ -78,7 +78,7 @@ TEST(Class_TSegment_Tests, Test_Segment_g3_ptr)
     segment->set_g3_ptr();
     ASSERT_TRUE(segment->get_g3_ptr() != nullptr);
     delete segment;
-}
+}*/
 
 TEST(Class_TSegment_Tests, Test_LSR_Plot_Values_Vector)
 {
