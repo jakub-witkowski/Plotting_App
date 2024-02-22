@@ -57,18 +57,18 @@ TEST(Class_TSegment_Tests, Load_Segment_Ages)
     delete segment;
 }
 
-/*TEST(Class_TSegment_Tests, Test_Segment_g1_ptr)
+TEST(Class_TSegment_Tests, Test_Segment_g2_ptr)
 {
     dataset->load_input();
     TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
     segment->copy_depths_to_segment();
     segment->copy_ages_to_segment();
-    segment->set_g1_ptr();
-    ASSERT_TRUE(segment->get_g1_ptr() != nullptr);
+    segment->set_g2_ptr_pretty();
+    ASSERT_TRUE(segment->get_g2_ptr_pretty() != nullptr);
     delete segment;
 }
 
-TEST(Class_TSegment_Tests, Test_Segment_g3_ptr)
+/*TEST(Class_TSegment_Tests, Test_Segment_g3_ptr)
 {
     dataset->load_input();
     TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);

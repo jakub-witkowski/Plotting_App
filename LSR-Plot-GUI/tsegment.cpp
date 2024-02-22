@@ -394,7 +394,7 @@ size_t TSegment::get_ages_for_pretty_fit_line_vector_size()
     return this->ages_for_pretty_fit_line.size();
 }
 
-TGraph* TSegment::get_g2_pretty_ptr()
+TGraph* TSegment::get_g2_ptr_pretty()
 {
     return this->g2;
 }

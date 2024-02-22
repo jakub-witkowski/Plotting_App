@@ -70,7 +70,7 @@ public:
     size_t get_pretty_fit_line_vector_size();
     size_t get_ages_for_pretty_fit_line_vector_size();
     TGraph* get_g1_ptr();
-    TGraph* get_g2_pretty_ptr();
+    TGraph* get_g2_ptr_pretty();
     TGraph* get_g3_ptr();
 
 private:
