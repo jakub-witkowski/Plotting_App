@@ -2,6 +2,7 @@
 LSR-Plot: aplikacja stworzona w ramach projektu zaliczeniowego na studiach podyplomowych "Programowanie z elementami systemów wbudowanych" (Zachodniopomorski Uniwersytet Technologiczny, Szczecin, luty 2024). W repozytorium znajduje się kod źródłowy aplikacji i testy jednostkowe.
 
 Aplikacja wykorzystuje biblioteki Qt (wersja 6; https://www.qt.io) oraz framework ROOT (https://root.cern).
+Funkcje składowe klasy TestModel, związane z wyświetlaniem wczytanego zbioru danych w formie tabeli, są wzorowane na: https://riptutorial.com/qt/example/13705/a-simple-read-only-table-to-view-data-from-a-model
 
 Ogólna logika programu - pseudokod:
 
