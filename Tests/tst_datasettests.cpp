@@ -68,17 +68,16 @@ TEST(Class_TSegment_Tests, Test_Segment_g2_ptr)
     delete segment;
 }
 
-/*TEST(Class_TSegment_Tests, Test_Segment_g3_ptr)
+TEST(Class_TSegment_Tests, Test_Segment_Data_Point_Number)
 {
     dataset->load_input();
     TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
     segment->copy_depths_to_segment();
     segment->copy_ages_to_segment();
     segment->compute_lsr_values();
-    segment->set_g3_ptr();
-    ASSERT_TRUE(segment->get_g3_ptr() != nullptr);
+    EXPECT_EQ(2*(segment->get_ages_vector_size() - 1), segment->get_lsr_plot_ages_vector_size());
     delete segment;
-}*/
+}
 
 TEST(Class_TSegment_Tests, Test_LSR_Plot_Values_Vector)
 {
