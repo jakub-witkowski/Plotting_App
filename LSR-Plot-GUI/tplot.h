@@ -5,12 +5,9 @@ class TSegment;
 
 /* include ROOT classes */
 #include "TGraph.h" // ROOT class enabling the creation of plots with X and Y axes and a set of points
-//#include "/snap/root-framework/928/usr/local/include/TGraph.h"
 #include "TCanvas.h" // ROOT graphics class
 #include "TMultiGraph.h" // A TMultiGraph allows to manipulate a set of graphs as a single entity (from ROOT documentation)
 #include "TAxis.h"
-// #include "TPad.h"
-// #include "TAttPad.h"
 #include "TLegend.h"
 #include "TStyle.h"
 
@@ -26,7 +23,7 @@ class TPlot
     ~TPlot();
 
     // int array_size;
-    TCanvas* cnv = new TCanvas("cnv", "LSR-Plot output", 0, 0, 1200, 800);
+    TCanvas* cnv = new TCanvas("plot", "LSR-Plot output", 0, 0, 1200, 800);
     TLegend* leg_left = new TLegend(0.5,0.8,0.9,0.9);
     TLegend* leg_right = new TLegend(0.7,0.8,0.9,0.9);
 

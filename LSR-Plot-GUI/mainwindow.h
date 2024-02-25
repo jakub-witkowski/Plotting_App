@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QAbstractTableModel>
 #include <QtCore>
+#include <QMessageBox>
 
 /* including self-defined classes */
 #include "tdata.h"
@@ -59,6 +60,8 @@ public:
     bool is_overfitted{false};
     TPlot* plot{nullptr};
 
+    void OnRefreshTimer();
+    void Create();
     // QTableView table;
     // MyModel data_for_display;
 

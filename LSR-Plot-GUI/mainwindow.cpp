@@ -108,6 +108,13 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
+    if (!dataset)
+    {
+        QMessageBox message;
+        message.setText("No input data loaded!");
+        message.exec();
+    }
+
     /* dataset is checked for whether gaps exist */
     if (dataset)
         dataset->find_hiatus();
@@ -220,15 +227,16 @@ void MainWindow::on_pushButton_3_clicked()
             rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
         }
 
+        // app.SetReturnFromRun(true);
         app.Run(kTRUE);
+        // app.ReturnFromRun();
     }
 
-    delete dataset;
-    delete plot;
+    // delete dataset;
+    // delete plot;
 }
 
 void MainWindow::on_pushButton_4_clicked()
 {
     exit(0);
 }
-
