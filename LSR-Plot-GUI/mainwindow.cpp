@@ -227,9 +227,7 @@ void MainWindow::on_pushButton_3_clicked()
             rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
         }
 
-        // app.SetReturnFromRun(true);
         app.Run(kTRUE);
-        // app.ReturnFromRun();
     }
 
     // delete dataset;
