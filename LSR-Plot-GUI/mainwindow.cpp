@@ -220,7 +220,7 @@ void MainWindow::on_pushButton_3_clicked()
             rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
         }
 
-        app.Run();
+        app.Run(kTRUE);
     }
 
     delete dataset;
