@@ -119,7 +119,7 @@ void MainWindow::on_pushButton_3_clicked()
         message1.exec();
     }
 
-    /* is the input data sorted? */
+    /* is the input data sorted?
     if (dataset)
     {
         if (!dataset->test_input_order())
@@ -128,14 +128,14 @@ void MainWindow::on_pushButton_3_clicked()
             message2.setText("The input data is not properly sorted! Inspect the input file and try again.");
             message2.exec();
         }
-    }
+    }*/
 
     /* dataset is checked for whether gaps exist */
-    if (dataset->test_input_order())
+    if (dataset)
         dataset->find_hiatus();
 
     /* if n gaps are found, n+1 class TSegment objects are created, and data is copied to the respective segments */
-    if ((dataset->test_input_order()) && (dataset->get_segment_indexes_size() != 0))
+    if ((dataset) && (dataset->get_segment_indexes_size() != 0))
     {
         for (int i = 0; i < dataset->get_segment_indexes_size(); i++)
         {
@@ -144,7 +144,6 @@ void MainWindow::on_pushButton_3_clicked()
             segments[i].copy_depths_to_segment();
             segments[i].set_g1_ptr();
             segments[i].compute_lsr_values();
-            // segments[i].set_g3_ptr();
         }
 
         /* polynomial fitting is performed; test for overfitting is performed as well */
@@ -174,82 +173,7 @@ void MainWindow::on_pushButton_3_clicked()
             /* linear sedimentation rates are smoothed using the selected polynomial fit */
             segments[i].set_g2_ptr_pretty();
             segments[i].lsr_smoothing();
-            // segments[i].set_g4_ptr();
         }
-
-        /* ROOT widget TApplication is created */
-        TApplication app("app", nullptr, nullptr);
-        TRootCanvas *rc{nullptr};
-
-        /* determine the number of segments and plot the results */
-        if (segments.size() == 1)
-        {
-            plot = new TPlot(segments[0]);
-            plot->plot();
-            // TRootCanvas *rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
-            // rc->Show();
-            // rc->Draw();
-        }
-        else if (segments.size() > 1)
-        {
-            std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
-
-            for (size_t i = 0; i < segments.size(); i++)
-            {
-                plot->set_segm_ptr(&segments[i]);
-                plot->copy_ages_to_plot();
-                plot->copy_depths_to_plot();
-                plot->set_g1_ptr();
-                // plot->copy_fit_line_to_plot();
-                // plot->set_g2_ptr();
-
-                /* modifications to the data vectors to reflect hiatuses between segments */
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_lsr_plot_values(0);
-
-                plot->copy_lsr_plot_values_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_lsr_plot_values(0);
-
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
-
-                plot->copy_lsr_plot_ages_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
-
-                plot->set_g3_ptr();
-
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_smoothed_lsr_plot_values(0);
-
-                plot->copy_smoothed_lsr_plot_values_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_smoothed_lsr_plot_values(0);
-
-                plot->set_g4_ptr();
-            }
-
-            plot->plot_from_array();
-            // TRootCanvas *rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
-            // rc->Draw();
-        }
-
-        // rc->Show();
-        app.Run(kTRUE);
     }
 }
 
@@ -288,126 +212,77 @@ void MainWindow::on_pushButton_5_clicked()
         message4.exec();
     }
 
-    /* dataset is checked for whether gaps exist */
-    if (dataset)
-        dataset->find_hiatus();
+    /* ROOT widget TApplication is created */
+    TApplication app("app", nullptr, nullptr);
+    TRootCanvas *rc{nullptr};
 
-    /* if n gaps are found, n+1 class TSegment objects are created, and data is copied to the respective segments */
-    if ((dataset) && (dataset->get_segment_indexes_size() != 0))
+    /* determine the number of segments and plot the results */
+    if (segments.size() == 1)
     {
-        for (int i = 0; i < dataset->get_segment_indexes_size(); i++)
-        {
-            segments.push_back(TSegment(dataset, dataset->get_index(i).first, dataset->get_index(i).second));
-            segments[i].copy_ages_to_segment();
-            segments[i].copy_depths_to_segment();
-            segments[i].set_g1_ptr();
-            segments[i].compute_lsr_values();
-            // segments[i].set_g3_ptr();
-        }
+        std::unique_ptr<TPlot> plot(new TPlot(segments[0]));
+        plot->plot();
+        rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
+        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
+    }
+    else if (segments.size() > 1)
+    {
+        std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
 
-        /* polynomial fitting is performed; test for overfitting is performed as well */
         for (size_t i = 0; i < segments.size(); i++)
         {
-            for (int j = 0; j < 10; j++)
-            {
-                segments[i].add_to_fit_vector(j);
-            }
+            plot->set_segm_ptr(&segments[i]);
+            plot->copy_ages_to_plot();
+            plot->copy_depths_to_plot();
+            plot->set_g1_ptr();
 
-            segments[i].perform_fitting();
-            segments[i].get_fit_line_for_plot(segments[i].find_the_best_fit(0));
-            segments[i].get_pretty_fit_line_for_plot(segments[i].find_the_best_fit(0));
+            /* modifications to the data vectors to reflect hiatuses between segments */
+            if (segments.size() > 1)
+                if ((i > 0) && (i <= segments.size() - 1))
+                    plot->set_lsr_plot_values(0);
 
-            is_overfitted = segments[i].test_for_overfitting();
-            int index{1};
-            while (is_overfitted == true)
-            {
-                segments[i].clear_fit_line_vector();
-                segments[i].get_fit_line_for_plot(segments[i].find_the_best_fit(index));
-                segments[i].clear_pretty_fit_line_vector();
-                segments[i].get_pretty_fit_line_for_plot(segments[i].find_the_best_fit(index));
-                index++;
-                is_overfitted = segments[i].test_for_overfitting();
-            }
+            plot->copy_lsr_plot_values_to_plot();
 
-            /* linear sedimentation rates are smoothed using the selected polynomial fit */
-            segments[i].set_g2_ptr_pretty();
-            segments[i].lsr_smoothing();
-            // segments[i].set_g4_ptr();
+            if (segments.size() > 1)
+                if ((i >= 0) && (i < segments.size() - 1))
+                    plot->set_lsr_plot_values(0);
+
+            if (segments.size() > 1)
+                if ((i > 0) && (i <= segments.size() - 1))
+                    plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
+
+            plot->copy_lsr_plot_ages_to_plot();
+
+            if (segments.size() > 1)
+                if ((i >= 0) && (i < segments.size() - 1))
+                    plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
+
+            plot->set_g3_ptr();
+
+            if (segments.size() > 1)
+                if ((i > 0) && (i <= segments.size() - 1))
+                    plot->set_smoothed_lsr_plot_values(0);
+
+            plot->copy_smoothed_lsr_plot_values_to_plot();
+
+            if (segments.size() > 1)
+                if ((i >= 0) && (i < segments.size() - 1))
+                    plot->set_smoothed_lsr_plot_values(0);
+
+            plot->set_g4_ptr();
         }
 
-        /* ROOT widget TApplication is created */
-        TApplication app("app", nullptr, nullptr);
-        TRootCanvas *rc{nullptr};
-
-        /* determine the number of segments and plot the results */
-        if (segments.size() == 1)
-        {
-            plot = new TPlot(segments[0]);
-            plot->plot();
-            // TRootCanvas *rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
-            // rc->Show();
-            // rc->Draw();
-        }
-        else if (segments.size() > 1)
-        {
-            std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
-
-            for (size_t i = 0; i < segments.size(); i++)
-            {
-                plot->set_segm_ptr(&segments[i]);
-                plot->copy_ages_to_plot();
-                plot->copy_depths_to_plot();
-                plot->set_g1_ptr();
-                // plot->copy_fit_line_to_plot();
-                // plot->set_g2_ptr();
-
-                /* modifications to the data vectors to reflect hiatuses between segments */
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_lsr_plot_values(0);
-
-                plot->copy_lsr_plot_values_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_lsr_plot_values(0);
-
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
-
-                plot->copy_lsr_plot_ages_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
-
-                plot->set_g3_ptr();
-
-                if (segments.size() > 1)
-                    if ((i > 0) && (i <= segments.size() - 1))
-                        plot->set_smoothed_lsr_plot_values(0);
-
-                plot->copy_smoothed_lsr_plot_values_to_plot();
-
-                if (segments.size() > 1)
-                    if ((i >= 0) && (i < segments.size() - 1))
-                        plot->set_smoothed_lsr_plot_values(0);
-
-                plot->set_g4_ptr();
-            }
-
-            plot->plot_from_array();
-            // TRootCanvas *rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
-            // rc->Draw();
-        }
-
-        // rc->Show();
-        app.Run(kTRUE);
+        plot->plot_from_array();
+        rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
+        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
     }
+
+    app.Run(kTRUE);
+}
+
+
+
+void MainWindow::on_pushButton_7_clicked()
+{
+
 }
 
