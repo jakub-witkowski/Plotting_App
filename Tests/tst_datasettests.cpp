@@ -1,7 +1,7 @@
 #include "../LSR-Plot-GUI/tdata.h"
 #include "../LSR-Plot-GUI/tsegment.h"
 #include "../LSR-Plot-GUI/tpolynomial.h"
-// #include "../LSR-Plot-GUI/tplot.h"
+#include "../LSR-Plot-GUI/tplot.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gtest/gtest.h>
@@ -156,15 +156,26 @@ TEST(Class_TPolynomial_Tests, Test_F_Pointer)
     EXPECT_FALSE(segment->get_f_ptr(9) == nullptr);
 }
 
-/*TEST(Class_TPlot_Tests, Converting_Constructor_Test)
+TEST(Class_TPlot_Tests, Converting_Constructor_Test)
 {
     dataset->load_input();
     TSegment segment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
     segment.copy_depths_to_segment();
     segment.copy_ages_to_segment();
+    segment.set_g1_ptr();
     segment.compute_lsr_values();
-
-}*/
+    for (size_t i = 0; i < 10; i++)
+    {
+        segment.add_to_fit_vector(i);
+    }
+    segment.perform_fitting();
+    segment.get_fit_line_for_plot(segment.find_the_best_fit(0));
+    segment.get_pretty_fit_line_for_plot(segment.find_the_best_fit(0));
+    segment.set_g2_ptr_pretty();
+    segment.lsr_smoothing();
+    TPlot* plot = new TPlot(segment);
+    EXPECT_GT(plot->get_lsr_ages_vector_size(), plot->get_ages_vector_size());
+}
 
 int main(int argc, char** argv)
 {
