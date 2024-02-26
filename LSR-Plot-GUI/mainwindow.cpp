@@ -287,10 +287,10 @@ void MainWindow::on_pushButton_5_clicked()
 
 
 
-void MainWindow::on_pushButton_7_clicked()
-{
+// void MainWindow::on_pushButton_7_clicked()
+// {
 
-}
+// }
 
 /* Export output into two CSV files: one for tabular data, one for polynomial regression equation for each segment */
 void MainWindow::on_pushButton_6_clicked()
@@ -311,14 +311,15 @@ void MainWindow::on_pushButton_6_clicked()
 
     if (dataset && plot)
     {
-        std::ofstream output_file("output.csv");
+        std::ofstream tabular_output_file("output_table.csv");
+        std::ofstream fitting_output_file("output_fitting.csv");
         std::string output_line;
 
-        if (output_file.is_open())
+        if (tabular_output_file.is_open())
         {
             output_line = "Depth (mbsf),Age (Ma), raw LSR (cm/kyr), smoothed LSR (cm/kyr)";
             output_line.append("\n");
-            output_file << output_line;
+            tabular_output_file << output_line;
             output_line.clear();
 
             for (size_t i = 0; i < dataset->get_raw_data_size(); i++)
@@ -354,16 +355,33 @@ void MainWindow::on_pushButton_6_clicked()
 
                 output_line.append("\n");
 
-                output_file << output_line;
+                tabular_output_file << output_line;
                 output_line.clear();
             }
         }
 
-        output_file.close();
+        tabular_output_file.close();
+        output_line.clear();
+
+        if (fitting_output_file.is_open())
+        {
+            for (size_t i = 0; i < segments.size(); i++)
+            {
+                output_line.append("Fit for Segment ");
+                output_line.append(std::to_string(i+1));
+                output_line.append(": ");
+
+                output_line.append("\n");
+                fitting_output_file << output_line;
+                output_line.clear();
+            }
+        }
 
         QMessageBox message7;
         message7.setText("Output export successful.");
         message7.exec();
+
+
     }
 }
 
