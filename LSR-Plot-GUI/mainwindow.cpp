@@ -79,31 +79,35 @@ void MainWindow::on_pushButton_clicked()
                                                     "~/",
                                                     "Comma-Separated Value files (*.csv)");
 
-    dataset = new TData(filename.toStdString());
-    dataset->load_input();
-
-    QList<QString> dataset_depths;
-    QList<QString> dataset_ages;
-
-    // load data from dataset to be displayed in widget
-    for (int i = 0; i < dataset->get_depths_vector_size(); i++)
+    /* proceed if file name is not an empty string; more than four chars (".csv") is a minimum valid filename length */
+    if (filename.length() > 4)
     {
-        dataset_depths.append(QString::number(dataset->get_depths(i)));
-        dataset_ages.append(QString::number(dataset->get_ages(i)));
+        dataset = new TData(filename.toStdString());
+        dataset->load_input();
+
+        QList<QString> dataset_depths;
+        QList<QString> dataset_ages;
+
+        // load data from dataset to be displayed in widget
+        for (int i = 0; i < dataset->get_depths_vector_size(); i++)
+        {
+            dataset_depths.append(QString::number(dataset->get_depths(i)));
+            dataset_ages.append(QString::number(dataset->get_ages(i)));
+        }
+
+        // Create model:
+        TestModel *AgeModel = new TestModel(this);
+
+        // Populate model with data:
+        AgeModel->populateData(dataset_depths,dataset_ages);
+
+        // Connect model to table view:
+        ui->tableView->setModel(AgeModel);
+
+        // Make table header visible and display table:
+        ui->tableView->horizontalHeader()->setVisible(true);
+        ui->tableView->show();
     }
-
-    // Create model:
-    TestModel *AgeModel = new TestModel(this);
-
-    // Populate model with data:
-    AgeModel->populateData(dataset_depths,dataset_ages);
-
-    // Connect model to table view:
-    ui->tableView->setModel(AgeModel);
-
-    // Make table header visible and display table:
-    ui->tableView->horizontalHeader()->setVisible(true);
-    ui->tableView->show();
 }
 
 void MainWindow::on_pushButton_3_clicked()
