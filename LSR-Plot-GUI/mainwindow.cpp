@@ -295,54 +295,75 @@ void MainWindow::on_pushButton_7_clicked()
 /* Export output into two CSV files: one for tabular data, one for polynomial regression equation for each segment */
 void MainWindow::on_pushButton_6_clicked()
 {
-    std::ofstream output_file("output.csv");
-    std::string output_line;
-
-    if (output_file.is_open())
+    if (!dataset)
     {
-        output_line = "Depth (mbsf),Age (Ma), raw LSR (cm/kyr), smoothed LSR (cm/kyr)";
-        output_line.append("\n");
-        output_file << output_line;
-        output_line.clear();
-
-        for (size_t i = 0; i < dataset->get_raw_data_size(); i++)
-        {
-            output_line.append(std::to_string(dataset->get_depths(i)));
-            output_line.append(",");
-            output_line.append(std::to_string(dataset->get_ages(i)));
-            output_line.append(",");
-
-            if (i == 0)
-            {
-                output_line.append(std::to_string(plot->get_lsr_plot_value(i)));
-                output_line.append(",");
-            }
-            else if ((i + i) >= plot->get_lsr_ages_vector_size())
-                output_line.append("");
-            else
-            {
-                output_line.append(std::to_string(plot->get_lsr_plot_value(i+i)));
-                output_line.append(",");
-            }
-
-            if (i == 0)
-            {
-                output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i)));
-            }
-            else if ((i + i) >= plot->get_lsr_ages_vector_size())
-                output_line.append("");
-            else
-            {
-                output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i+i)));
-            }
-
-            output_line.append("\n");
-
-            output_file << output_line;
-            output_line.clear();
-        }
+        QMessageBox message5;
+        message5.setText("No input data loaded!");
+        message5.exec();
     }
 
-    output_file.close();
+    if ((dataset) && (!plot))
+    {
+        QMessageBox message6;
+        message6.setText("Analyze data before exporting output!");
+        message6.exec();
+    }
+
+    if (dataset && plot)
+    {
+        std::ofstream output_file("output.csv");
+        std::string output_line;
+
+        if (output_file.is_open())
+        {
+            output_line = "Depth (mbsf),Age (Ma), raw LSR (cm/kyr), smoothed LSR (cm/kyr)";
+            output_line.append("\n");
+            output_file << output_line;
+            output_line.clear();
+
+            for (size_t i = 0; i < dataset->get_raw_data_size(); i++)
+            {
+                output_line.append(std::to_string(dataset->get_depths(i)));
+                output_line.append(",");
+                output_line.append(std::to_string(dataset->get_ages(i)));
+                output_line.append(",");
+
+                if (i == 0)
+                {
+                    output_line.append(std::to_string(plot->get_lsr_plot_value(i)));
+                    output_line.append(",");
+                }
+                else if ((i + i) >= plot->get_lsr_ages_vector_size())
+                    output_line.append("");
+                else
+                {
+                    output_line.append(std::to_string(plot->get_lsr_plot_value(i+i)));
+                    output_line.append(",");
+                }
+
+                if (i == 0)
+                {
+                    output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i)));
+                }
+                else if ((i + i) >= plot->get_lsr_ages_vector_size())
+                    output_line.append("");
+                else
+                {
+                    output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i+i)));
+                }
+
+                output_line.append("\n");
+
+                output_file << output_line;
+                output_line.clear();
+            }
+        }
+
+        output_file.close();
+
+        QMessageBox message7;
+        message7.setText("Output export successful.");
+        message7.exec();
+    }
 }
 
