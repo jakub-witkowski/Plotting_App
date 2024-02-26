@@ -99,7 +99,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Plot Raw Data</string>
+     <string>Plot Data</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_6">
