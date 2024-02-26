@@ -112,6 +112,50 @@ TEST(Class_TSegment_Tests, Compare_LSR_Ages_And_LSR_Values_Vectors_Length)
     delete segment;
 }
 
+TEST(Class_TPolynomial_Tests, Test_Fit_Vector_Size)
+{
+    dataset->load_input();
+    TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment->copy_depths_to_segment();
+    segment->copy_ages_to_segment();
+    segment->set_g1_ptr();
+    for (size_t i = 0; i < 10; i++)
+    {
+        segment->add_to_fit_vector(i);
+    }
+    ASSERT_TRUE(segment->get_fit_vector_size() == 10);
+    delete segment;
+}
+
+TEST(Class_TPolynomial_Tests, Test_TPolynomial_String_Member)
+{
+    dataset->load_input();
+    TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment->copy_depths_to_segment();
+    segment->copy_ages_to_segment();
+    segment->set_g1_ptr();
+    for (size_t i = 0; i < 10; i++)
+    {
+        segment->add_to_fit_vector(i);
+    }
+    EXPECT_STREQ("pol 4", segment->get_fit_phrase(4).c_str());
+    delete segment;
+}
+
+TEST(Class_TPolynomial_Tests, Test_F_Pointer)
+{
+    dataset->load_input();
+    TSegment* segment = new TSegment(dataset, dataset->get_index(0).first, dataset->get_index(0).second);
+    segment->copy_depths_to_segment();
+    segment->copy_ages_to_segment();
+    segment->set_g1_ptr();
+    for (size_t i = 0; i < 10; i++)
+    {
+        segment->add_to_fit_vector(i);
+    }
+    EXPECT_FALSE(segment->get_f_ptr(9) == nullptr);
+}
+
 /*TEST(Class_TPlot_Tests, Converting_Constructor_Test)
 {
     dataset->load_input();

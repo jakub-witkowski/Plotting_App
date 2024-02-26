@@ -62,6 +62,7 @@ public:
     double get_ages_for_pretty_fit_line(int);
     size_t get_ages_vector_size();
     size_t get_depths_vector_size();
+    size_t get_fit_vector_size();
     size_t get_fit_line_vector_size();
     size_t get_lsr_values_vector_size();
     size_t get_lsr_plot_values_vector_size();
@@ -72,6 +73,8 @@ public:
     TGraph* get_g1_ptr();
     TGraph* get_g2_ptr_pretty();
     TGraph* get_g3_ptr();
+    std::string get_fit_phrase(int);
+    TF1* get_f_ptr(int);
 
 private:
     TData* dset{nullptr}; // set by the constructor at initialisation

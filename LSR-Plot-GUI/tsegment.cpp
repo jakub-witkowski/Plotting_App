@@ -364,6 +364,11 @@ size_t TSegment::get_depths_vector_size()
     return this->depths.size();
 }
 
+size_t TSegment::get_fit_vector_size()
+{
+    return this->fit.size();
+}
+
 size_t TSegment::get_lsr_values_vector_size()
 {
     return this->lsr_values.size();
@@ -397,6 +402,16 @@ size_t TSegment::get_ages_for_pretty_fit_line_vector_size()
 TGraph* TSegment::get_g2_ptr_pretty()
 {
     return this->g2;
+}
+
+std::string TSegment::get_fit_phrase(int i)
+{
+    return this->fit[i]->phrase;
+}
+
+TF1* TSegment::get_f_ptr(int i)
+{
+    return this->fit[i]->f;
 }
 
 /*TGraph* TSegment::get_g1_ptr()
