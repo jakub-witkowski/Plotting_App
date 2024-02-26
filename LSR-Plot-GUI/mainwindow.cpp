@@ -11,6 +11,10 @@ https://riptutorial.com/qt/example/13705/a-simple-read-only-table-to-view-data-f
 #include <QString>
 #include <QFileDialog>
 
+/* including STL header files */
+#include <fstream>
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -219,14 +223,16 @@ void MainWindow::on_pushButton_5_clicked()
     /* determine the number of segments and plot the results */
     if (segments.size() == 1)
     {
-        std::unique_ptr<TPlot> plot(new TPlot(segments[0]));
+        // std::unique_ptr<TPlot> plot(new TPlot(segments[0]));
+        plot = new TPlot(segments[0]);
         plot->plot();
         rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
         rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
     }
     else if (segments.size() > 1)
     {
-        std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
+        // std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
+        plot = new TPlot((int)segments.size(), segments);
 
         for (size_t i = 0; i < segments.size(); i++)
         {
@@ -284,5 +290,60 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_pushButton_7_clicked()
 {
 
+}
+
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    //Export output
+    std::ofstream output_file("output.csv");
+    std::string output_line;
+
+    if (output_file.is_open())
+    {
+        output_line = "Depth (mbsf),Age (Ma), raw LSR (cm/kyr), smoothed LSR (cm/kyr)";
+        output_line.append("\n");
+        output_file << output_line;
+        output_line.clear();
+
+        for (size_t i = 0; i < dataset->get_raw_data_size(); i++)
+        {
+            output_line.append(std::to_string(dataset->get_depths(i)));
+            output_line.append(",");
+            output_line.append(std::to_string(dataset->get_ages(i)));
+            output_line.append(",");
+
+            if (i == 0)
+            {
+                output_line.append(std::to_string(plot->get_lsr_plot_value(i)));
+                output_line.append(",");
+            }
+            else if (((i + i)/2) >= dataset->get_raw_data_size())
+                output_line.append("");
+            else if (((i + i)/2) < dataset->get_raw_data_size())
+            {
+                output_line.append(std::to_string(plot->get_lsr_plot_value(i+i)));
+                output_line.append(",");
+            }
+
+            if (i == 0)
+            {
+                output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i)));
+            }
+            else if (((i + i)/2) >= dataset->get_raw_data_size())
+                output_line.append("");
+            else if (((i + i)/2) < dataset->get_raw_data_size())
+            {
+                output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i+i)));
+            }
+
+            output_line.append("\n");
+
+            output_file << output_line;
+            output_line.clear();
+        }
+    }
+
+    output_file.close();
 }
 

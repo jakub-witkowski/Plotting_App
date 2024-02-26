@@ -364,3 +364,13 @@ double TPlot::get_lsr_plot_age(int i)
 {
     return this->lsr_plot_ages[i];
 }
+
+double TPlot::get_lsr_plot_value(int i)
+{
+    return this->lsr_plot_values[i];
+}
+
+double TPlot::get_smoothed_lsr_plot_value(int i)
+{
+    return this->smoothed_lsr_plot_values[i];
+}

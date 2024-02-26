@@ -60,6 +60,8 @@ class TPlot
     size_t get_ages_vector_size();
     size_t get_lsr_ages_vector_size();
     double get_lsr_plot_age(int);
+    double get_lsr_plot_value(int);
+    double get_smoothed_lsr_plot_value(int);
 
     private:
     std::vector<double> depths{};
