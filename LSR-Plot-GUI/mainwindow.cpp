@@ -292,10 +292,9 @@ void MainWindow::on_pushButton_7_clicked()
 
 }
 
-
+/* Export output into two CSV files: one for tabular data, one for polynomial regression equation for each segment */
 void MainWindow::on_pushButton_6_clicked()
 {
-    //Export output
     std::ofstream output_file("output.csv");
     std::string output_line;
 
@@ -318,9 +317,9 @@ void MainWindow::on_pushButton_6_clicked()
                 output_line.append(std::to_string(plot->get_lsr_plot_value(i)));
                 output_line.append(",");
             }
-            else if (((i + i)/2) >= dataset->get_raw_data_size())
+            else if ((i + i) >= plot->get_lsr_ages_vector_size())
                 output_line.append("");
-            else if (((i + i)/2) < dataset->get_raw_data_size())
+            else
             {
                 output_line.append(std::to_string(plot->get_lsr_plot_value(i+i)));
                 output_line.append(",");
@@ -330,9 +329,9 @@ void MainWindow::on_pushButton_6_clicked()
             {
                 output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i)));
             }
-            else if (((i + i)/2) >= dataset->get_raw_data_size())
+            else if ((i + i) >= plot->get_lsr_ages_vector_size())
                 output_line.append("");
-            else if (((i + i)/2) < dataset->get_raw_data_size())
+            else
             {
                 output_line.append(std::to_string(plot->get_smoothed_lsr_plot_value(i+i)));
             }
