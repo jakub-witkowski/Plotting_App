@@ -374,3 +374,8 @@ double TPlot::get_smoothed_lsr_plot_value(int i)
 {
     return this->smoothed_lsr_plot_values[i];
 }
+
+int TPlot::get_graphs_size()
+{
+    return this->graphs_size;
+}

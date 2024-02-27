@@ -62,6 +62,7 @@ class TPlot
     double get_lsr_plot_age(int);
     double get_lsr_plot_value(int);
     double get_smoothed_lsr_plot_value(int);
+    int get_graphs_size();
 
     private:
     std::vector<double> depths{};
