@@ -63,6 +63,9 @@ public:
     std::vector<TSegment> segments{};
     bool is_overfitted{false};
     TPlot* plot{nullptr};
+    TPlot* plot2{nullptr};
+    // TApplication* app{nullptr};
+    // TRootCanvas* rc{nullptr};
 
 private slots:
     void on_pushButton_clicked();
