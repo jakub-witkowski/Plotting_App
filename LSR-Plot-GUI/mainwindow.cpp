@@ -30,12 +30,36 @@ TestModel::TestModel(QObject *parent) : QAbstractTableModel(parent)
 }
 
 /* Populate the model with data */
-void TestModel::populateData(const QList<QString> &dataset_depths,const QList<QString> &dataset_ages)
+void TestModel::populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages)
 {
     tiepoint_depth.clear();
     tiepoint_depth = dataset_depths;
     tiepoint_age.clear();
     tiepoint_age = dataset_ages;
+    return;
+}
+
+void TestModel::populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages, const QList<QString> &lsr_values)
+{
+    tiepoint_depth.clear();
+    tiepoint_depth = dataset_depths;
+    tiepoint_age.clear();
+    tiepoint_age = dataset_ages;
+    lsr.clear();
+    lsr = lsr_values;
+    return;
+}
+
+void TestModel::populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages, const QList<QString> &lsr_values, const QList<QString> &smoothed_lsr_values)
+{
+    tiepoint_depth.clear();
+    tiepoint_depth = dataset_depths;
+    tiepoint_age.clear();
+    tiepoint_age = dataset_ages;
+    lsr.clear();
+    lsr = lsr_values;
+    smoothed_lsr.clear();
+    smoothed_lsr = smoothed_lsr_values;
     return;
 }
 
@@ -56,26 +80,50 @@ QVariant TestModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || role != Qt::DisplayRole) {
         return QVariant();
     }
-    if (index.column() == 0) {
+    if (index.column() == 0)
+    {
         return tiepoint_depth[index.row()];
-    } else if (index.column() == 1) {
+    }
+    else if (index.column() == 1)
+    {
         return tiepoint_age[index.row()];
+    }
+    else if (index.column() == 2)
+    {
+        return lsr[index.row()];
+    }
+    else if (index.column() == 3)
+    {
+        return smoothed_lsr[index.row()];
     }
     return QVariant();
 }
 
 QVariant TestModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-        if (section == 0) {
+    if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
+    {
+        if (section == 0)
+        {
             return QString("Depth (mbsf)");
-        } else if (section == 1) {
+        }
+        else if (section == 1)
+        {
             return QString("Age (Ma)");
+        }
+        else if (section == 2)
+        {
+            return QString("LSR (cm/kyr)");
+        }
+        else if (section == 3)
+        {
+            return QString("Smoothed LSR (cm/kyr)");
         }
     }
     return QVariant();
 }
 
+/* Load Data button */
 void MainWindow::on_pushButton_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this,
@@ -91,19 +139,24 @@ void MainWindow::on_pushButton_clicked()
 
         QList<QString> dataset_depths;
         QList<QString> dataset_ages;
+        // QList<QString> lsr_values;
+        // QList<QString> smoothed_lsr_values;
 
         // load data from dataset to be displayed in widget
         for (int i = 0; i < dataset->get_depths_vector_size(); i++)
         {
             dataset_depths.append(QString::number(dataset->get_depths(i)));
             dataset_ages.append(QString::number(dataset->get_ages(i)));
+            // lsr_values.append(QString::number(i));
+            // smoothed_lsr_values.append(QString::number(0));
         }
 
         // Create model:
         TestModel *AgeModel = new TestModel(this);
 
         // Populate model with data:
-        AgeModel->populateData(dataset_depths,dataset_ages);
+        // AgeModel->populateData(dataset_depths, dataset_ages, lsr_values);
+        AgeModel->populateData(dataset_depths, dataset_ages);
 
         // Connect model to table view:
         ui->tableView->setModel(AgeModel);
@@ -114,6 +167,7 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
+/* Analyze Data button */
 void MainWindow::on_pushButton_3_clicked()
 {
     if (!dataset)
@@ -181,11 +235,13 @@ void MainWindow::on_pushButton_3_clicked()
     }
 }
 
+/* Quit button */
 void MainWindow::on_pushButton_4_clicked()
 {
     exit(0);
 }
 
+/* Clear Data button */
 void MainWindow::on_pushButton_2_clicked()
 {
     if (!dataset)
@@ -207,6 +263,7 @@ void MainWindow::on_pushButton_2_clicked()
     ui->tableView->hide();
 }
 
+/* Plot Data button */
 void MainWindow::on_pushButton_5_clicked()
 {
     if (!dataset)
@@ -284,8 +341,6 @@ void MainWindow::on_pushButton_5_clicked()
 
     app.Run(kTRUE);
 }
-
-
 
 // void MainWindow::on_pushButton_7_clicked()
 // {

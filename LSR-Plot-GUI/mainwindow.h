@@ -33,7 +33,9 @@ class TestModel : public QAbstractTableModel
 public:
     TestModel(QObject *parent = 0);
 
-    void populateData(const QList<QString> &dataset_depths,const QList<QString> &dataset_ages);
+    void populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages);
+    void populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages, const QList<QString> &lsr_values);
+    void populateData(const QList<QString> &dataset_depths, const QList<QString> &dataset_ages, const QList<QString> &lsr_values, const QList<QString> &smoothed_lsr_values);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
@@ -44,6 +46,8 @@ public:
 private:
     QList<QString> tiepoint_depth;
     QList<QString> tiepoint_age;
+    QList<QString> lsr;
+    QList<QString> smoothed_lsr;
 
 };
 
