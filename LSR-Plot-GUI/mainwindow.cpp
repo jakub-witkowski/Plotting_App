@@ -72,7 +72,7 @@ int TestModel::rowCount(const QModelIndex &parent) const
 int TestModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 2;
+    return 4;
 }
 
 QVariant TestModel::data(const QModelIndex &index, int role) const
@@ -139,24 +139,24 @@ void MainWindow::on_pushButton_clicked()
 
         QList<QString> dataset_depths;
         QList<QString> dataset_ages;
-        // QList<QString> lsr_values;
-        // QList<QString> smoothed_lsr_values;
+        QList<QString> lsr_values;
+        QList<QString> smoothed_lsr_values;
 
         // load data from dataset to be displayed in widget
         for (int i = 0; i < dataset->get_depths_vector_size(); i++)
         {
             dataset_depths.append(QString::number(dataset->get_depths(i)));
             dataset_ages.append(QString::number(dataset->get_ages(i)));
-            // lsr_values.append(QString::number(i));
-            // smoothed_lsr_values.append(QString::number(0));
+            lsr_values.append(QString::number(0));
+            smoothed_lsr_values.append(QString::number(0));
         }
 
         // Create model:
         TestModel *AgeModel = new TestModel(this);
 
         // Populate model with data:
-        // AgeModel->populateData(dataset_depths, dataset_ages, lsr_values);
-        AgeModel->populateData(dataset_depths, dataset_ages);
+        AgeModel->populateData(dataset_depths, dataset_ages, lsr_values, smoothed_lsr_values);
+        // AgeModel->populateData(dataset_depths, dataset_ages);
 
         // Connect model to table view:
         ui->tableView->setModel(AgeModel);
@@ -195,6 +195,8 @@ void MainWindow::on_pushButton_3_clicked()
     /* if n gaps are found, n+1 class TSegment objects are created, and data is copied to the respective segments */
     if ((dataset) && (dataset->get_segment_indexes_size() != 0))
     {
+        ui->tableView->hide();
+
         for (int i = 0; i < dataset->get_segment_indexes_size(); i++)
         {
             segments.push_back(TSegment(dataset, dataset->get_index(i).first, dataset->get_index(i).second));
@@ -232,6 +234,104 @@ void MainWindow::on_pushButton_3_clicked()
             segments[i].set_g2_ptr_pretty();
             segments[i].lsr_smoothing();
         }
+
+        if (segments.size() == 1)
+            plot = new TPlot(segments[0]);
+        else if (segments.size() > 1)
+        {
+            // std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
+            plot = new TPlot((int)segments.size(), segments);
+
+            for (size_t i = 0; i < segments.size(); i++)
+            {
+                plot->set_segm_ptr(&segments[i]);
+                plot->copy_ages_to_plot();
+                plot->copy_depths_to_plot();
+                plot->set_g1_ptr();
+
+                /* modifications to the data vectors to reflect hiatuses between segments */
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot->set_lsr_plot_values(0);
+
+                plot->copy_lsr_plot_values_to_plot();
+
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot->set_lsr_plot_values(0);
+
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
+
+                plot->copy_lsr_plot_ages_to_plot();
+
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
+
+                plot->set_g3_ptr();
+
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot->set_smoothed_lsr_plot_values(0);
+
+                plot->copy_smoothed_lsr_plot_values_to_plot();
+
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot->set_smoothed_lsr_plot_values(0);
+
+                plot->set_g4_ptr();
+            }
+        }
+
+        /* refresh QTableWidget */
+        QList<QString> dataset_depths;
+        QList<QString> dataset_ages;
+        QList<QString> lsr_values;
+        QList<QString> smoothed_lsr_values;
+
+        // load data from dataset to be displayed in widget
+        for (int i = 0; i < dataset->get_depths_vector_size(); i++)
+        {
+            dataset_depths.append(QString::number(dataset->get_depths(i)));
+            dataset_ages.append(QString::number(dataset->get_ages(i)));
+        }
+
+        for (int i = 0; i < dataset->get_depths_vector_size(); i++)
+        {
+            if (i == 0)
+                lsr_values.append(QString::number(plot->get_lsr_plot_value(i)));
+            else if ((i + i) >= plot->get_lsr_ages_vector_size())
+                break;
+            else
+                lsr_values.append(QString::number(plot->get_lsr_plot_value(i+i)));
+        }
+
+        for (int i = 0; i < dataset->get_depths_vector_size(); i++)
+        {
+            if (i == 0)
+                smoothed_lsr_values.append(QString::number(plot->get_smoothed_lsr_plot_value(i)));
+            else if ((i + i) >= plot->get_lsr_ages_vector_size())
+                break;
+            else
+                smoothed_lsr_values.append(QString::number(plot->get_smoothed_lsr_plot_value(i+i)));
+        }
+
+        // Create model:
+        TestModel *AgeModel2 = new TestModel(this);
+
+        // Populate model with data:
+        // AgeModel->populateData(dataset_depths, dataset_ages, lsr_values);
+        AgeModel2->populateData(dataset_depths, dataset_ages, lsr_values, smoothed_lsr_values);
+
+        // Connect model to table view:
+        ui->tableView->setModel(AgeModel2);
+
+        // Make table header visible and display table:
+        ui->tableView->horizontalHeader()->setVisible(true);
+        ui->tableView->show();
     }
 }
 
@@ -281,64 +381,66 @@ void MainWindow::on_pushButton_5_clicked()
     if (segments.size() == 1)
     {
         // std::unique_ptr<TPlot> plot(new TPlot(segments[0]));
-        plot = new TPlot(segments[0]);
+        // plot = new TPlot(segments[0]);
         plot->plot();
-        rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
+        // rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
+        // rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
     }
     else if (segments.size() > 1)
     {
         // std::unique_ptr<TPlot> plot(new TPlot((int)segments.size(), segments));
-        plot = new TPlot((int)segments.size(), segments);
+        // plot = new TPlot((int)segments.size(), segments);
 
-        for (size_t i = 0; i < segments.size(); i++)
-        {
-            plot->set_segm_ptr(&segments[i]);
-            plot->copy_ages_to_plot();
-            plot->copy_depths_to_plot();
-            plot->set_g1_ptr();
+        // for (size_t i = 0; i < segments.size(); i++)
+        // {
+        //     plot->set_segm_ptr(&segments[i]);
+        //     plot->copy_ages_to_plot();
+        //     plot->copy_depths_to_plot();
+        //     plot->set_g1_ptr();
 
             /* modifications to the data vectors to reflect hiatuses between segments */
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot->set_lsr_plot_values(0);
+        //     if (segments.size() > 1)
+        //         if ((i > 0) && (i <= segments.size() - 1))
+        //             plot->set_lsr_plot_values(0);
 
-            plot->copy_lsr_plot_values_to_plot();
+        //     plot->copy_lsr_plot_values_to_plot();
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot->set_lsr_plot_values(0);
+        //     if (segments.size() > 1)
+        //         if ((i >= 0) && (i < segments.size() - 1))
+        //             plot->set_lsr_plot_values(0);
 
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
+        //     if (segments.size() > 1)
+        //         if ((i > 0) && (i <= segments.size() - 1))
+        //             plot->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
 
-            plot->copy_lsr_plot_ages_to_plot();
+        //     plot->copy_lsr_plot_ages_to_plot();
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
+        //     if (segments.size() > 1)
+        //         if ((i >= 0) && (i < segments.size() - 1))
+        //             plot->set_lsr_plot_ages(plot->get_lsr_plot_age(plot->get_lsr_ages_vector_size() - 1));
 
-            plot->set_g3_ptr();
+        //     plot->set_g3_ptr();
 
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot->set_smoothed_lsr_plot_values(0);
+        //     if (segments.size() > 1)
+        //         if ((i > 0) && (i <= segments.size() - 1))
+        //             plot->set_smoothed_lsr_plot_values(0);
 
-            plot->copy_smoothed_lsr_plot_values_to_plot();
+        //     plot->copy_smoothed_lsr_plot_values_to_plot();
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot->set_smoothed_lsr_plot_values(0);
+        //     if (segments.size() > 1)
+        //         if ((i >= 0) && (i < segments.size() - 1))
+        //             plot->set_smoothed_lsr_plot_values(0);
 
-            plot->set_g4_ptr();
-        }
+        //     plot->set_g4_ptr();
+        // }
 
         plot->plot_from_array();
-        rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
-        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
+        // rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
+        // rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
     }
 
+    rc = (TRootCanvas *)plot->cnv->GetCanvasImp();
+    rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
     app.Run(kTRUE);
 }
 
