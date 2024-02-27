@@ -368,70 +368,73 @@ void MainWindow::on_pushButton_5_clicked()
         message4.exec();
     }
 
-    /* ROOT widget TApplication is created */
-    TApplication app("app", nullptr, nullptr);
-
-    /* determine the number of segments and plot the results */
-    if (segments.size() == 1)
+    if ((dataset) && (segments.size() != 0))
     {
-        plot2 = new TPlot(segments[0]);
-        plot2->plot();
-        TRootCanvas *rc = (TRootCanvas *)plot2->cnv->GetCanvasImp();
-        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
-    }
-    else if (segments.size() > 1)
-    {
-        plot2 = new TPlot((int)segments.size(), segments);
+        /* ROOT widget TApplication is created */
+        TApplication app("app", nullptr, nullptr);
 
-        for (size_t i = 0; i < segments.size(); i++)
+        /* determine the number of segments and plot the results */
+        if (segments.size() == 1)
         {
-            plot2->set_segm_ptr(&segments[i]);
-            plot2->copy_ages_to_plot();
-            plot2->copy_depths_to_plot();
-            plot2->set_g1_ptr();
+            plot2 = new TPlot(segments[0]);
+            plot2->plot();
+            TRootCanvas *rc = (TRootCanvas *)plot2->cnv->GetCanvasImp();
+            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
+        }
+        else if (segments.size() > 1)
+        {
+            plot2 = new TPlot((int)segments.size(), segments);
 
-            /* modifications to the data vectors to reflect hiatuses between segments */
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot2->set_lsr_plot_values(0);
+            for (size_t i = 0; i < segments.size(); i++)
+            {
+                plot2->set_segm_ptr(&segments[i]);
+                plot2->copy_ages_to_plot();
+                plot2->copy_depths_to_plot();
+                plot2->set_g1_ptr();
 
-            plot2->copy_lsr_plot_values_to_plot();
+                /* modifications to the data vectors to reflect hiatuses between segments */
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot2->set_lsr_plot_values(0);
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot2->set_lsr_plot_values(0);
+                plot2->copy_lsr_plot_values_to_plot();
 
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot2->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot2->set_lsr_plot_values(0);
 
-            plot2->copy_lsr_plot_ages_to_plot();
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot2->set_lsr_plot_ages(segments[i].get_lsr_plot_age(0)); // repeat first element from the segment to be copied
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot2->set_lsr_plot_ages(plot2->get_lsr_plot_age(plot2->get_lsr_ages_vector_size() - 1));
+                plot2->copy_lsr_plot_ages_to_plot();
 
-            plot2->set_g3_ptr();
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot2->set_lsr_plot_ages(plot2->get_lsr_plot_age(plot2->get_lsr_ages_vector_size() - 1));
 
-            if (segments.size() > 1)
-                if ((i > 0) && (i <= segments.size() - 1))
-                    plot2->set_smoothed_lsr_plot_values(0);
+                plot2->set_g3_ptr();
 
-            plot2->copy_smoothed_lsr_plot_values_to_plot();
+                if (segments.size() > 1)
+                    if ((i > 0) && (i <= segments.size() - 1))
+                        plot2->set_smoothed_lsr_plot_values(0);
 
-            if (segments.size() > 1)
-                if ((i >= 0) && (i < segments.size() - 1))
-                    plot2->set_smoothed_lsr_plot_values(0);
+                plot2->copy_smoothed_lsr_plot_values_to_plot();
 
-            plot2->set_g4_ptr();
+                if (segments.size() > 1)
+                    if ((i >= 0) && (i < segments.size() - 1))
+                        plot2->set_smoothed_lsr_plot_values(0);
+
+                plot2->set_g4_ptr();
+            }
+
+            plot2->plot_from_array();
+            TRootCanvas *rc = (TRootCanvas *)plot2->cnv->GetCanvasImp();
+            rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
         }
 
-        plot2->plot_from_array();
-        TRootCanvas *rc = (TRootCanvas *)plot2->cnv->GetCanvasImp();
-        rc->Connect("CloseWindow()", "TApplication", gApplication, "Terminate()");
+        app.Run(kTRUE);
     }
-
-    app.Run(kTRUE);
 }
 
 // delete dataset;
@@ -462,7 +465,7 @@ void MainWindow::on_pushButton_6_clicked()
     if (dataset && plot)
     {
         std::ofstream tabular_output_file("output_table.csv");
-        std::ofstream fitting_output_file("output_fitting.csv");
+        // std::ofstream fitting_output_file("output_fitting.csv");
         std::string output_line;
 
         output_line.clear();
@@ -518,7 +521,7 @@ void MainWindow::on_pushButton_6_clicked()
         tabular_output_file.close();
         output_line.clear();
 
-        if (fitting_output_file.is_open())
+        /*if (fitting_output_file.is_open())
         {
             for (size_t i = 0; i < segments.size(); i++)
             {
@@ -530,7 +533,7 @@ void MainWindow::on_pushButton_6_clicked()
                 fitting_output_file << output_line;
                 output_line.clear();
             }
-        }
+        }*/
 
         QMessageBox message7;
         message7.setText("Output export successful.");
