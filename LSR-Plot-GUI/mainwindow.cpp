@@ -309,6 +309,8 @@ void MainWindow::on_pushButton_3_clicked()
                 lsr_values.append(QString::number(plot->get_lsr_plot_value(i+i)));
         }
 
+        lsr_values.append(QString("None"));
+
         for (int i = 0; i < dataset->get_depths_vector_size(); i++)
         {
             if (i == 0)
@@ -319,11 +321,12 @@ void MainWindow::on_pushButton_3_clicked()
                 smoothed_lsr_values.append(QString::number(plot->get_smoothed_lsr_plot_value(i+i)));
         }
 
+        smoothed_lsr_values.append(QString("None"));
+
         // Create model:
         TestModel *AgeModel2 = new TestModel(this);
 
         // Populate model with data:
-        // AgeModel->populateData(dataset_depths, dataset_ages, lsr_values);
         AgeModel2->populateData(dataset_depths, dataset_ages, lsr_values, smoothed_lsr_values);
 
         // Connect model to table view:
